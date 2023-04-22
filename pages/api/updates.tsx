@@ -19,12 +19,14 @@ export default async function handler(req: NextRequest) {
     `Bulk updates`,
   ];
 
+  const url = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `http://localhost:3000`
+
   return new ImageResponse(
     (
       <div
         style={{
           backgroundColor: "#fff",
-          backgroundImage: `url('http://localhost:3000/updates_bg.png')`,
+          backgroundImage: `url('${url}/updates_bg.png')`,
           backgroundSize: "100% 100%",
           height: "100%",
           width: "100%",
