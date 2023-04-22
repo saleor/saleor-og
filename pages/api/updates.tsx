@@ -18,23 +18,32 @@ export default async function handler(req: NextRequest) {
     `Transactions API`,
     `Bulk updates`,
   ];
+  const isLarge = searchParams.has('large');
 
   const url = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `http://localhost:3000`
+
+  const width = 2086;
+  const height = isLarge ? 1300 : 1100;
+
+  const topMargin = isLarge ? 100 : 0;
+  const topPadding =  292 + topMargin;
+  const backgroundPositionY = 225 - topMargin;
 
   return new ImageResponse(
     (
       <div
         style={{
           backgroundColor: "#fff",
-          backgroundImage: `url('${url}/updates_bg.png')`,
-          backgroundSize: "100% 100%",
+          backgroundImage: `url('${url}/updates_bg_larger.png')`,
+          backgroundPosition: `-298px -${backgroundPositionY}px`,
+          backgroundSize: "cover",
           height: "100%",
           width: "100%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "flex-start",
-          padding: `292px 278px`,
+          padding: `${topPadding}px 278px 292px 278px`,
           fontFamily: `Hero New`,
           fontWeight: 700,
           boxSizing: "border-box",
@@ -90,8 +99,8 @@ export default async function handler(req: NextRequest) {
       </div>
     ),
     {
-      width: 2086,
-      height: 1100,
+      width,
+      height,
       emoji: "twemoji",
       fonts: [
         {
