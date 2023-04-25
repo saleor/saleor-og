@@ -15,16 +15,20 @@ export default async function handler(req: NextRequest) {
 	const { searchParams } = new URL(req.url);
 	const version = searchParams.get("version") || "";
 	const contents = searchParams.get("contents")?.split("\n") || ["Saleor OG"];
-	const isLarge = searchParams.has("large");
+	const variant: "small" | "large" | "youtube" = ["small", "large", "youtube"].includes(
+		searchParams.get("variant") as "small" | "large" | "youtube",
+	)
+		? (searchParams.get("variant") as "small" | "large" | "youtube")
+		: "small";
 
 	const url = process.env.VERCEL_URL
 		? `https://${process.env.VERCEL_URL}`
 		: `http://localhost:3000`;
 
 	const width = 2086;
-	const height = isLarge ? 1300 : 1100;
+	const height = { large: 1300, small: 1100, youtube: 1173 }[variant];
 
-	const topMargin = isLarge ? 100 : 0;
+	const topMargin = { large: 100, small: 0, youtube: 0 }[variant];
 	const topPadding = 292 + topMargin;
 	const backgroundPositionY = 225 - topMargin;
 
@@ -53,6 +57,7 @@ export default async function handler(req: NextRequest) {
 						display: "flex",
 						flexDirection: "row",
 						alignItems: "center",
+						...(variant === "youtube" && { marginLeft: "auto", marginRight: "auto" }),
 					}}
 				>
 					<svg
@@ -71,28 +76,39 @@ export default async function handler(req: NextRequest) {
 						/>
 					</svg>
 
-					<div
-						style={{
-							fontSize: 60,
-							marginLeft: 42,
-							lineHeight: 1,
-						}}
-					>
-						{version && `× ${version}`}
-					</div>
+					{version && (
+						<div
+							style={{
+								fontSize: 60,
+								marginLeft: 42,
+								lineHeight: 1,
+							}}
+						>
+							{`× ${version}`}
+						</div>
+					)}
 				</div>
 				<div
 					style={{
 						display: "flex",
 						flexDirection: "column",
+						width: "100%",
 						fontSize: 120,
 						lineHeight: 1.05,
 						marginTop: 40,
 						letterSpacing: "-4px",
+						...(variant === "youtube" && { marginLeft: "auto", marginRight: "auto" }),
 					}}
 				>
 					{contents.map((text, idx) => (
-						<span key={text + idx}>{text}</span>
+						<div
+							key={text + idx}
+							style={{
+								...(variant === "youtube" && { marginLeft: "auto", marginRight: "auto" }),
+							}}
+						>
+							{text}
+						</div>
 					))}
 				</div>
 			</div>

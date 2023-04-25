@@ -26,7 +26,9 @@ export default function Page() {
 	};
 
 	const urlSmall = params && `/api/updates?` + new URLSearchParams(params);
-	const urlLarge = params && `/api/updates?` + new URLSearchParams({ ...params, large: "" });
+	const urlLarge = params && `/api/updates?` + new URLSearchParams({ ...params, variant: "large" });
+	const urlYouTube =
+		params && `/api/updates?` + new URLSearchParams({ ...params, variant: "youtube" });
 
 	return (
 		<div>
@@ -75,13 +77,19 @@ export default function Page() {
 				<Button type="submit" size="large">
 					Generate
 				</Button>
-				{urlSmall && urlLarge && (
+				{urlSmall && urlLarge && urlYouTube && (
 					<>
+						<p>Small:</p>
 						<a href={urlSmall} download={`saleor-update-small-${new Date().toISOString()}.png`}>
 							<img src={urlSmall} />
 						</a>
+						<p>Large:</p>
 						<a href={urlLarge} download={`saleor-update-large-${new Date().toISOString()}.png`}>
 							<img src={urlLarge} />
+						</a>
+						<p>YouTube:</p>
+						<a href={urlYouTube} download={`saleor-update-youtube-${new Date().toISOString()}.png`}>
+							<img src={urlYouTube} />
 						</a>
 					</>
 				)}
