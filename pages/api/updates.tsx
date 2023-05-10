@@ -21,6 +21,12 @@ export default async function handler(req: NextRequest) {
 		? (searchParams.get("variant") as "small" | "large" | "youtube")
 		: "small";
 
+	const theme: "dark" | "light" = ["dark", "light"].includes(
+		searchParams.get("theme") as "dark" | "light",
+	)
+		? (searchParams.get("theme") as "dark" | "light")
+		: "light";
+
 	const url = process.env.VERCEL_URL
 		? `https://${process.env.VERCEL_URL}`
 		: `http://localhost:3000`;
@@ -36,8 +42,11 @@ export default async function handler(req: NextRequest) {
 		(
 			<div
 				style={{
-					backgroundColor: "#fff",
-					backgroundImage: `url('${url}/updates_bg_larger.png')`,
+					backgroundColor: theme === "dark" ? "#121212" : "#fff",
+					backgroundImage:
+						theme === "dark"
+							? `url('${url}/updates_bg_larger_noire.png')`
+							: `url('${url}/updates_bg_larger.png')`,
 					backgroundPosition: `-298px -${backgroundPositionY}px`,
 					backgroundSize: "cover",
 					height: "100%",
@@ -67,12 +76,12 @@ export default async function handler(req: NextRequest) {
 						fill="none"
 						xmlns="http://www.w3.org/2000/svg"
 					>
-						<rect width="160" height="160" rx="24" fill="#121212" />
+						<rect width="160" height="160" rx="24" fill={theme === "dark" ? `#fff` : `#121212`} />
 						<rect
 							width="76.4519"
 							height="44.1737"
 							transform="matrix(1 0 -0.689367 0.724413 57 64)"
-							fill="white"
+							fill={theme === "dark" ? `#121212` : `#fff`}
 						/>
 					</svg>
 
@@ -82,6 +91,7 @@ export default async function handler(req: NextRequest) {
 								fontSize: 60,
 								marginLeft: 42,
 								lineHeight: 1,
+								color: theme === "dark" ? `#fff` : `#000`,
 							}}
 						>
 							{`× ${version}`}
@@ -97,6 +107,7 @@ export default async function handler(req: NextRequest) {
 						lineHeight: 1.05,
 						marginTop: 40,
 						letterSpacing: "-4px",
+						color: theme === "dark" ? `#fff` : `#000`,
 						...(variant === "youtube" && { marginLeft: "auto", marginRight: "auto" }),
 					}}
 				>
